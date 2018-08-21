@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.AddActivity">
+
+    <TextView
+        android:id="@+id/tip"
+        android:layout_below="@id/progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="请先选择照片输入地点名称，然后点击上传到七牛云，继续选择照片，最后选择完后点击上传url集合"/>
+    <TextView
+        android:layout_below="@+id/tip"
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="已上传：" />
+
+    <EditText
+        android:id="@+id/edit_name"
+        android:hint="请输入地名"
+        android:layout_below="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <ProgressBar
+        android:id="@+id/progress"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100" />
+    <Button
+        android:layout_above="@+id/post_button"
+        android:id="@+id/chose_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="选择"/>
+    <Button
+        android:layout_above="@+id/post_url"
+        android:id="@+id/post_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="上传到七牛云" />
+    <Button
+        android:id="@+id/post_url"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="上传url集合"/>
+
+</RelativeLayout>

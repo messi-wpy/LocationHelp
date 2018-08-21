@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/change_url"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:hint="你所上传的照片的URL，你可以通过删除一行URL来删除这张图片"
+        android:textSize="20sp"
+        android:textColor="@color/colorPrimary"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimary"/>
+
+    <EditText
+        android:id="@+id/change_name"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="地名"
+        android:textSize="20sp"
+        android:textColor="@color/colorPrimary"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimary"/>
+
+
+    <EditText
+        android:id="@+id/change_jing"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="经度"
+        android:textSize="20sp"
+        android:textColor="@color/colorPrimary"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimary"/>
+
+    <EditText
+        android:id="@+id/change_wei"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="纬度"
+        android:textSize="20sp"
+        android:textColor="@color/colorPrimary"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimary"/>
+
+    <EditText
+        android:gravity="top"
+        android:id="@+id/change_detail"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:hint="描述"
+        android:textSize="20sp"
+        android:textColor="@color/colorPrimary"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/change_save"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:text="保存"
+            android:textSize="20sp"
+            android:textColor="@color/colorPrimary"/>
+        <Button
+            android:id="@+id/change_del"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:text="删除"
+            android:textSize="20sp"
+            android:textColor="@color/colorPrimary"/>
+    </LinearLayout>
+
+
+
+
+</LinearLayout>
