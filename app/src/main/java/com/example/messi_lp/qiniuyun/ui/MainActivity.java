@@ -3,13 +3,13 @@ package com.example.messi_lp.qiniuyun.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
 
-import com.example.messi_lp.qiniuyun.Check;
 import com.example.messi_lp.qiniuyun.CreateRetrofit;
 import com.example.messi_lp.qiniuyun.R;
 
@@ -20,7 +20,7 @@ import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MainActivity extends Check {
+public class MainActivity extends AppCompatActivity {
 
     private final static String TAG="QINIU";
     private RecyclerView mRecyclerView;
