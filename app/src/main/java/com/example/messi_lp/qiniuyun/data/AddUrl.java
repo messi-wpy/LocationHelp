@@ -1,11 +1,36 @@
 package com.example.messi_lp.qiniuyun.data;
 
-public class AddUrl {
-    private String mName;
-    private String[] mUrlList;
+import java.util.List;
 
-    public AddUrl(String mName,String[] mUrlList){
-        this.mName=mName;
-        this.mUrlList=mUrlList;
+public class AddUrl {
+
+
+    /**
+     * name : yy楼
+     * url : ["string"]
+     */
+
+    private String name;
+    private List<String> url;
+
+
+    public AddUrl(String name,List<String> list){
+        this.name=name;
+        this.url=list;
+    }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<String> getUrl() {
+        return url;
+    }
+
+    public void setUrl(List<String> url) {
+        this.url = url;
     }
 }

@@ -49,7 +49,8 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
     private String mImageUrl;
     private ProgressBar mProgressBar;
     private List<String >mUrlList=new ArrayList<>();
-    private int  num=0;
+    private int  num=1;
+    private final static  String TAG="QINIU";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +64,7 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
         auth= Auth.create(Config.ACCESS_KEY,Config.SECRET_KEY);
         mButton.setOnClickListener(this);
         mPost.setOnClickListener(this);
+        mAddUrl.setOnClickListener(this);
 
         }
 
@@ -137,18 +139,24 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
                 break;
             }
             case R.id.post_url:{
+                Log.i(TAG, "onClick: successs");
                 // TODO: 18-8-21 如果点击两次上传两次，名字一样会怎样 
                 mAddUrl.setEnabled(false);
                 if (mUrlList.size()>0&&!fileName.equals("")) {
-                    CreateRetrofit.getmApiService().addUrl(new AddUrl(fileName,mUrlList.toArray(new String[mUrlList.size()])))
+                    CreateRetrofit.getmApiService().addUrl(new AddUrl(fileName,mUrlList))
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(addUrl ->{
                                 mAddUrl.setEnabled(true);
                                 Toast.makeText(getApplicationContext(),"上传成功",Toast.LENGTH_LONG).show();
+                            },Throwable::printStackTrace,()->{
+                                Log.i("qiniu", "上传成功 ");
                             } );
-                }else 
+                }else {
+                    Log.i(TAG, "onClick:FALSE ");
                     mAddUrl.setEnabled(true);
+                }
+                break;
             }
             default:break;
         }

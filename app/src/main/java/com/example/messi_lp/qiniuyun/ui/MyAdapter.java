@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import java.util.List;
 class MyAdapter extends RecyclerView.Adapter {
     private List<String> list;
     private Context context;
+    private final static String TAG="adapter";
 
     public MyAdapter(List<String> list, Context context){
         this.list = list;
@@ -26,16 +28,18 @@ class MyAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
         View view = inflater.inflate(R.layout.item,viewGroup,false);
-        return new MyHolder(view,list.get(i));
+        return new MyHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-
+        Log.i(TAG, "onCreateViewHolder: "+list.get(i)+"    "+i);
+        ((MyHolder)viewHolder).bind(list.get(i));
     }
 
     @Override
     public int getItemCount() {
+        Log.i(TAG, "getItemCount: "+list.size());
         return list.size();
     }
 
@@ -43,7 +47,7 @@ class MyAdapter extends RecyclerView.Adapter {
         private TextView nameText;
         private String name;
 
-        public MyHolder(View itemView,String name) {
+        public MyHolder(View itemView) {
             super(itemView);
             this.name = name;
             nameText = itemView.findViewById(R.id.place_name);
@@ -56,6 +60,11 @@ class MyAdapter extends RecyclerView.Adapter {
             Intent intent = new Intent(context,ChangeActivity.class);
             intent.putExtra("name",name);
             context.startActivity(intent);
+        }
+
+        public void bind(String s){
+            nameText.setText(s);
+            name = s;
         }
     }
 }
