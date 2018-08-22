@@ -71,10 +71,29 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
         mButton.setOnClickListener(this);
         mPost.setOnClickListener(this);
         mAddUrl.setOnClickListener(this);
+        checkPermission();
 
         }
 
 
+        public void checkPermission(){
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.READ_CONTACTS)) {
+                    Toast.makeText(this,"需要读取照片上传",Toast.LENGTH_SHORT).show();
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                            1);
+                }else {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                            1);
+                }
+
+            }
+        }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
@@ -119,21 +138,31 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
                     return;
                 }
 
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                            Manifest.permission.READ_CONTACTS)) {
-                        Toast.makeText(this,"需要读取照片上传",Toast.LENGTH_SHORT).show();
-                        ActivityCompat.requestPermissions(this,
-                                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                1);
-                    }else {
-                        ActivityCompat.requestPermissions(this,
-                                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                1);
+                long time = new Date().getTime();
+                String random = Integer.toHexString((int) time);
+                QiNiuInitialize.getSingleton().put(photoPath, fileName + random, mToken, new UpCompletionHandler() {
+                    @Override
+                    public void complete(String key, ResponseInfo info, JSONObject response) {
+                        if (info.isOK()) {
+                            mPost.setEnabled(true);
+                            mImageUrl = Config.URL + key;
+                            mUrlList.add(mImageUrl);
+                            mTextView.setText("已上传"+num);
+                            num++;
+                            Log.i("qiniu", "Upload Success   url:" + mImageUrl);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "错误，请不要输入相同的名字", Toast.LENGTH_LONG).show();
+                            Log.i("qiniu", "Upload Fail");
+                        }
+                        Log.i("qiniu", key + ",\r\n " + info + ",\r\n " + response);
                     }
-
-                }
+                }, new UploadOptions(null, null, false, new UpProgressHandler() {
+                    @Override
+                    public void progress(String key, double percent) {
+                        mProgressBar.setProgress((int) (percent * 100));
+                        Log.i("QINIU", "progress: " + percent);
+                    }
+                }, null));
 
 
 
@@ -169,34 +198,10 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
         if (requestCode==1){
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                long time = new Date().getTime();
-                String random = Integer.toHexString((int) time);
-                QiNiuInitialize.getSingleton().put(photoPath, fileName + random, mToken, new UpCompletionHandler() {
-                    @Override
-                    public void complete(String key, ResponseInfo info, JSONObject response) {
-                        if (info.isOK()) {
-                            mPost.setEnabled(true);
-                            mImageUrl = Config.URL + key;
-                            mUrlList.add(mImageUrl);
-                            mTextView.setText("已上传"+num);
-                            num++;
-                            Log.i("qiniu", "Upload Success   url:" + mImageUrl);
-                        } else {
-                            Toast.makeText(getApplicationContext(), "错误，请不要输入相同的名字", Toast.LENGTH_LONG).show();
-                            Log.i("qiniu", "Upload Fail");
-                        }
-                        Log.i("qiniu", key + ",\r\n " + info + ",\r\n " + response);
-                    }
-                }, new UploadOptions(null, null, false, new UpProgressHandler() {
-                    @Override
-                    public void progress(String key, double percent) {
-                        mProgressBar.setProgress((int) (percent * 100));
-                        Log.i("QINIU", "progress: " + percent);
-                    }
-                }, null));
 
             }
-        }
+        }else
+            finish();
     }
 
 }
