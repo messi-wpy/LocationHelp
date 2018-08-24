@@ -19,7 +19,7 @@ import rx.Observable;
 
 public interface ApiInterface {
     @POST("plat/")
-    Observable<AddUrl> addUrl(@Body AddUrl addUrl);
+    Observable<Msg> addUrl(@Body AddUrl addUrl);
 
     @GET("plat/names/")
     Observable<LocationName>getNames();

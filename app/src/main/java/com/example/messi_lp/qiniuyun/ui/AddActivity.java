@@ -176,9 +176,9 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
                     CreateRetrofit.getmApiService().addUrl(new AddUrl(fileName,mUrlList))
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(addUrl ->{
+                            .subscribe(msg ->{
                                 mAddUrl.setEnabled(true);
-                                Toast.makeText(getApplicationContext(),"上传成功",Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(),msg.getMsg(),Toast.LENGTH_LONG).show();
                             },Throwable::printStackTrace,()->{
                                 Log.i("qiniu", "上传成功 ");
                             } );

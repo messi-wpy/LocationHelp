@@ -13,6 +13,7 @@ import com.example.messi_lp.qiniuyun.R;
 import com.example.messi_lp.qiniuyun.data.AddUrl;
 import com.example.messi_lp.qiniuyun.data.Delate;
 import com.example.messi_lp.qiniuyun.data.Detail;
+import com.example.messi_lp.qiniuyun.data.Msg;
 import com.example.messi_lp.qiniuyun.data.Update;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import java.util.List;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class ChangeActivity extends AppCompatActivity implements View.OnClickListener {
@@ -30,7 +32,7 @@ public class ChangeActivity extends AppCompatActivity implements View.OnClickLis
     private EditText weiText;
     private EditText detailText;
     private String mName;
-    private final static String TAG="QINIU";
+    private final static String TAG = "QINIU";
     private Button saveButton;
     private Button delButton;
 
@@ -38,7 +40,7 @@ public class ChangeActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change);
-        mName=getIntent().getStringExtra("name");
+        mName = getIntent().getStringExtra("name");
         urlText = findViewById(R.id.change_url);
         nameText = findViewById(R.id.change_name);
         jingText = findViewById(R.id.change_jing);
@@ -53,20 +55,20 @@ public class ChangeActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         CreateRetrofit.getmApiService().getDetail(mName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(detail -> {
-                    Log.i(TAG, "onResume: "+detail.getPlat().getName()+detail.getPlat().getInfo());
+                    Log.i(TAG, "onResume ");
                     nameText.setText(detail.getPlat().getName());
                     detailText.setText(detail.getPlat().getInfo());
                     jingText.setText(detail.getPlat().getPoints().get(1).toString());
                     weiText.setText(detail.getPlat().getPoints().get(0).toString());
-                    StringBuilder url= new StringBuilder();
-                    for (int i=0;i<detail.getPlat().getUrl().size();i++){
-                        if (i==detail.getPlat().getUrl().size()-1){
+                    StringBuilder url = new StringBuilder();
+                    for (int i = 0; i < detail.getPlat().getUrl().size(); i++) {
+                        if (i == detail.getPlat().getUrl().size() - 1) {
                             url.append(detail.getPlat().getUrl().get(i));
                             continue;
                         }
@@ -74,41 +76,57 @@ public class ChangeActivity extends AppCompatActivity implements View.OnClickLis
                     }
 
                     urlText.setText(url.toString());
-                    },Throwable::printStackTrace,()->{});
+                }, Throwable::printStackTrace, () -> {
+                });
 
     }
 
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.change_save:{
-                List<String>list;
-                List<Double>doubles=new ArrayList<>();
+        switch (view.getId()) {
+            case R.id.change_save: {
+                List<String> list;
+                List<Double> doubles = new ArrayList<>();
                 doubles.add(Double.valueOf(weiText.getText().toString()));
                 doubles.add(Double.valueOf(jingText.getText().toString()));
-                list= Arrays.asList(urlText.getText().toString().split("\n"));
-                Update update=new Update(nameText.getText().toString(),
-                        detailText.getText().toString(),list,doubles);
+                list = Arrays.asList(urlText.getText().toString().split("\n"));
+                Update update = new Update(nameText.getText().toString(),
+                        detailText.getText().toString(), list, doubles);
                 CreateRetrofit.getmApiService().updata(update)
                         .subscribeOn(Schedulers.io())
+                        .onErrorResumeNext(CreateRetrofit.getmApiService()
+                                .addUrl(new AddUrl(nameText.getText().toString(), list))
+                                .subscribeOn(Schedulers.io())
+                                .flatMap(new Func1<Msg, Observable<Msg>>() {
+                                    @Override
+                                    public Observable<Msg> call(Msg addUrl) {
+                                        return CreateRetrofit.getmApiService().delete(new Delate(mName));
+                                    }
+                                }).flatMap(new Func1<Msg, Observable<Msg>>() {
+                                    @Override
+                                    public Observable<Msg> call(Msg msg) {
+                                        return CreateRetrofit.getmApiService().updata(update);
+                                    }
+                                }))
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(b -> {
-                            Toast.makeText(getApplicationContext(),b.getMsg(),Toast.LENGTH_LONG).show();
-                        },Throwable::printStackTrace);
+                            Toast.makeText(getApplicationContext(), b.getMsg(), Toast.LENGTH_LONG).show();
+                        }, Throwable::printStackTrace);
                 break;
             }
-            case R.id.change_del:{
+            case R.id.change_del: {
                 CreateRetrofit.getmApiService().delete(new Delate(mName))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(delate->{
-                            Toast.makeText(getApplicationContext(),delate.getMsg(),Toast.LENGTH_LONG).show();
+                        .subscribe(delate -> {
+                            Toast.makeText(getApplicationContext(), delate.getMsg(), Toast.LENGTH_LONG).show();
                             finish();
-                        },Throwable::printStackTrace);
+                        }, Throwable::printStackTrace);
                 break;
             }
-            default:break;
+            default:
+                break;
         }
     }
 }

@@ -33,13 +33,13 @@ class MyAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-        Log.i(TAG, "onCreateViewHolder: "+list.get(i)+"    "+i);
+
         ((MyHolder)viewHolder).bind(list.get(i));
     }
 
     @Override
     public int getItemCount() {
-        Log.i(TAG, "getItemCount: "+list.size());
+
         return list.size();
     }
 
