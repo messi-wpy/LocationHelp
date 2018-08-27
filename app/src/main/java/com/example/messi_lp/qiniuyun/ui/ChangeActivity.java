@@ -86,6 +86,7 @@ public class ChangeActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.change_save: {
+                saveButton.setEnabled(false);
                 List<String> list;
                 List<Double> doubles = new ArrayList<>();
                 doubles.add(Double.valueOf(weiText.getText().toString()));
@@ -112,7 +113,7 @@ public class ChangeActivity extends AppCompatActivity implements View.OnClickLis
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(b -> {
                             Toast.makeText(getApplicationContext(), b.getMsg(), Toast.LENGTH_LONG).show();
-                        }, Throwable::printStackTrace);
+                        }, Throwable::printStackTrace,()->saveButton.setEnabled(true));
                 break;
             }
             case R.id.change_del: {
