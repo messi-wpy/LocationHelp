@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.messi_lp.qiniuyun.CreateRetrofit;
 import com.example.messi_lp.qiniuyun.R;
+import com.example.messi_lp.qiniuyun.RxBus;
 import com.example.messi_lp.qiniuyun.data.AddUrl;
 import com.example.messi_lp.qiniuyun.utils.Auth;
 import com.example.messi_lp.qiniuyun.utils.Config;
@@ -73,6 +74,7 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
         mAddUrl.setOnClickListener(this);
         checkPermission();
 
+        RxBus.getDefault().send("from"+this.getLocalClassName());
         }
 
 

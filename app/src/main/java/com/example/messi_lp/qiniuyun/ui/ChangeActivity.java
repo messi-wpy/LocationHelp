@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.example.messi_lp.qiniuyun.CreateRetrofit;
 import com.example.messi_lp.qiniuyun.R;
+import com.example.messi_lp.qiniuyun.RxBus;
 import com.example.messi_lp.qiniuyun.data.AddUrl;
 import com.example.messi_lp.qiniuyun.data.Delate;
 import com.example.messi_lp.qiniuyun.data.Detail;
@@ -49,6 +50,7 @@ public class ChangeActivity extends AppCompatActivity implements View.OnClickLis
         saveButton.setOnClickListener(this);
         delButton = findViewById(R.id.change_del);
         delButton.setOnClickListener(this);
+        RxBus.getDefault().send("frome"+this.getLocalClassName());
 
     }
 
