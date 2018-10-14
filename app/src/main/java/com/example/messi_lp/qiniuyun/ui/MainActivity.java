@@ -20,10 +20,11 @@ import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  {
 
     private final static String TAG="QINIU";
     private RecyclerView mRecyclerView;
+    private MyAdapter myAdapter;
     private List<String> list = new ArrayList<>();
 
     @Override
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(),AddActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,0);
             }
         });
 
@@ -46,19 +47,6 @@ public class MainActivity extends AppCompatActivity {
     public void onResume(){
         super.onResume();
         Log.i(TAG, "onResume: ");
-        CreateRetrofit.getmApiService().getNames()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(locationName -> {
-                    if (locationName.getName()!=null) {
-                        Log.i(TAG, "get all");
-                        list = locationName.getName();
-                        mRecyclerView.setAdapter(new MyAdapter(list, this));
-                    }
-                    Log.i(TAG, "get ");
-                },Throwable::printStackTrace,()->{
-                    Log.i("QINIU", "getName ok ");
-                });
     }
 
     private void initRecycler() {
@@ -67,7 +55,32 @@ public class MainActivity extends AppCompatActivity {
         }
         mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(new MyAdapter(list,this));
+        myAdapter=new MyAdapter(list,this);
+        mRecyclerView.setAdapter(myAdapter);
+        CreateRetrofit.getmApiService().getNames()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(locationName -> {
+                    if (locationName.getName()!=null) {
+                        Log.i(TAG, "get all");
+                        list = locationName.getName();
+                        myAdapter.addAll(list);
+                        myAdapter.notifyDataSetChanged();
+                    }
+                    Log.i(TAG, "get ");
+                },Throwable::printStackTrace,()->{
+                    Log.i("QINIU", "getName ok ");
+                });
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String name=data.getStringExtra("name");
+        if(requestCode==0&&resultCode==0){
+            myAdapter.addA(name);
+            myAdapter.notifyDataSetChanged();
+        }
     }
 
 }

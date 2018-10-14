@@ -3,6 +3,7 @@ package com.example.messi_lp.qiniuyun.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +23,14 @@ class MyAdapter extends RecyclerView.Adapter {
     public MyAdapter(List<String> list, Context context){
         this.list = list;
         this.context =context;
+    }
+
+    public void addAll(List<String>l){
+        list.clear();
+        list.addAll(l);
+    }
+    public void addA(String name){
+        list.add(name);
     }
     @NonNull
     @Override
@@ -59,8 +68,10 @@ class MyAdapter extends RecyclerView.Adapter {
         public void onClick(View view) {
             Intent intent = new Intent(context,ChangeActivity.class);
             intent.putExtra("name",name);
+            //((AppCompatActivity)context).startActivityForResult(intent,1);
             context.startActivity(intent);
         }
+
 
         public void bind(String s){
             nameText.setText(s);

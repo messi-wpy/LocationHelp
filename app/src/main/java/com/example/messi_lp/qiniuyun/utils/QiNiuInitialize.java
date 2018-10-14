@@ -22,7 +22,7 @@ public class QiNiuInitialize {
             synchronized (QiNiuInitialize.class) {
                 if (instance == null) {
                     instance = new UploadManager(new Configuration.Builder()
-                            .zone(FixedZone.zone0)
+                            .zone(FixedZone.zone2)
                             .useHttps(true)
                             .build());
                 }

@@ -55,6 +55,7 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
     private String mImageUrl;
     private ProgressBar mProgressBar;
     private List<String >mUrlList=new ArrayList<>();
+    private Intent mIntent=new Intent();
     private int  num=1;
     private final static  String TAG="QINIU";
     @Override
@@ -145,7 +146,7 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
                     public void complete(String key, ResponseInfo info, JSONObject response) {
                         if (info.isOK()) {
                             mPost.setEnabled(true);
-                            mImageUrl = Config.URL + key;
+                            mImageUrl = Config.URL + key+Config.pictureType;
                             mUrlList.add(mImageUrl);
                             mTextView.setText("已上传"+num);
                             num++;
@@ -179,6 +180,8 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
                             .subscribe(msg ->{
                                 mAddUrl.setEnabled(true);
                                 Toast.makeText(getApplicationContext(),msg.getMsg(),Toast.LENGTH_LONG).show();
+                                mIntent.putExtra("name",fileName);
+                                this.setResult(0,mIntent);
                             },Throwable::printStackTrace,()->{
                                 Log.i("qiniu", "上传成功 ");
                             } );
